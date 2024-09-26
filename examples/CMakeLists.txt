@@ -1,4 +1,6 @@
-#这行代码指定了buired_example这个可执行目标需要链接的库。
-#target_link_libraries是CMake的另一个命令，用于指定目标依赖的库。
+
+# 娣诲姞鍙墽琛屾枃浠讹紝鏂囦欢鍚嶄负buired_example锛屾簮鏂囦欢涓篵uired_examples.cc
 add_executable(buired_example buired_examples.cc)
+
+# 灏咮uried_static搴撻摼鎺ュ埌buired_example鍙墽琛屾枃浠朵腑
 target_link_libraries(buired_example Buried_static)

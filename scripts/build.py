@@ -3,60 +3,84 @@ import shutil
 import os
 import sys
 import argparse
-#os.path.split() º¯Êı½ÓÊÕÒ»¸öÂ·¾¶×÷Îª²ÎÊı£¬
 
-#²¢½«Æä·Ö¸î³ÉÒ»¸ö°üº¬Á½¸öÔªËØµÄÔª×é£º×îºóÒ»¸öÂ·¾¶×é¼ş£¨Í¨³£ÊÇÎÄ¼şÃû£©ºÍËùÓĞÇ°ÃæµÄÂ·¾¶×é¼ş£¨¼´Ä¿Â¼Â·¾¶£©¡£
+
+
+# è·å–è„šæœ¬æ‰€åœ¨è·¯å¾„
 SCRIPT_PATH = os.path.split(os.path.realpath(__file__))[0]
+# è·å–æ„å»ºç›®å½•è·¯å¾„
 BUILD_DIR_PATH = SCRIPT_PATH + '/../build'
 
 
+# æ¸…ç©ºæ„å»ºç›®å½•
 def clear():
     if os.path.exists(BUILD_DIR_PATH):
         shutil.rmtree(BUILD_DIR_PATH)
 
 
+# æ„å»ºwindowså¹³å°
 def build_windows(platform='x64', config='Release', args=None):
     
+    # è·å–æ„å»ºç›®å½•è·¯å¾„
     platform_dir = '%s/%s-%s' % (BUILD_DIR_PATH, platform, config)
+    # åˆ›å»ºæ„å»ºç›®å½•
     os.makedirs(platform_dir, exist_ok=True)
 
+    # åˆ‡æ¢åˆ°æ„å»ºç›®å½•
     os.chdir(platform_dir)
 
-    #¹¹½¨ÀàĞÍÊ¹ÓÃVisual Studio 17 2022
+   
+    # æ„å»ºå‘½ä»¤
     build_cmd = 'cmake ../.. -G "Visual Studio 17 2022" -DCMAKE_BUILD_TYPE=%s -DCMAKE_GENERATOR_PLATFORM=%s -T v143' % (
         config, platform)
    
+    # å¦‚æœéœ€è¦è¿è¡Œæµ‹è¯•ï¼Œæ·»åŠ æµ‹è¯•é€‰é¡¹
     if args.test:
         build_cmd += ' -DBUILD_BURIED_TEST=ON'
 
+    # å¦‚æœéœ€è¦è¿è¡Œç¤ºä¾‹ï¼Œæ·»åŠ ç¤ºä¾‹é€‰é¡¹
     if args.example:
         build_cmd += ' -DBUILD_BURIED_EXAMPLES=ON'
 
+    # æ‰“å°æ„å»ºå‘½ä»¤
     print("build cmd:" + build_cmd)
-    #ÖÕ¶ËÖ´ĞĞÃüÁî
+    
+    # æ‰§è¡Œæ„å»ºå‘½ä»¤
     ret = os.system(build_cmd)
+    # å¦‚æœæ„å»ºå¤±è´¥ï¼Œæ‰“å°é”™è¯¯ä¿¡æ¯
     if ret != 0:
         print('!!!!!!!!!!!!!!!!!!build fail')
         return False
-    #--parallel 8 ²ÎÊıÖ¸¶¨²¢ĞĞ¹¹½¨µÄÏß³ÌÊı¡£ÕâÀïÊÇ 8£¬±íÊ¾Ê¹ÓÃ 8 ¸öÏß³Ì½øĞĞ²¢ĞĞ¹¹½¨¡£
+   
+    # æ„å»ºå‘½ä»¤
     build_cmd = 'cmake --build . --config %s --parallel 8' % (config)
+    # æ‰§è¡Œæ„å»ºå‘½ä»¤
     ret = os.system(build_cmd)
+    # å¦‚æœæ„å»ºå¤±è´¥ï¼Œæ‰“å°é”™è¯¯ä¿¡æ¯
     if ret != 0:
         print('build fail!!!!!!!!!!!!!!!!!!!!')
         return False
     return True
 
 
+# ä¸»å‡½æ•°
 def main():
+    # æ¸…ç©ºæ„å»ºç›®å½•
     clear()
+    # åˆ›å»ºæ„å»ºç›®å½•
     os.makedirs(BUILD_DIR_PATH, exist_ok=True)
+    # åˆ›å»ºå‘½ä»¤è¡Œå‚æ•°è§£æå™¨
     parser = argparse.ArgumentParser(description='build windows')
+    # æ·»åŠ æµ‹è¯•é€‰é¡¹
     parser.add_argument('--test', action='store_true', default=False,
                         help='run unittest')
+    # æ·»åŠ ç¤ºä¾‹é€‰é¡¹
     parser.add_argument('--example', action='store_true', default=False,
                         help='run examples')
+    # è§£æå‘½ä»¤è¡Œå‚æ•°
     args = parser.parse_args()
 
+    # æ„å»ºwindowså¹³å°
     if not build_windows(platform='x64', config='Debug', args=args):
         exit(1)
 
