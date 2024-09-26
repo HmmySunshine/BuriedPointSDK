@@ -1,0 +1,8 @@
+# 忽略 build 目录
+build/
+
+# 忽略 Visual Studio 生成的文件
+TraceSDK.vcxproj
+TraceSDK.vcxproj.filters
+TraceSDK.vcxproj.user
+TraceSDK.sln
